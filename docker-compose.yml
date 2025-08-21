@@ -3,5 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      - PORT=9000
     ports:
-      - "5000:5000"
+      - 9000:9000
+    

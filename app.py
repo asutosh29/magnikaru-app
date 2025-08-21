@@ -2,7 +2,9 @@ from flask import Flask, render_template, jsonify, request
 from flask_cors import CORS
 import chess
 import random
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
@@ -46,6 +48,6 @@ def random_move():
 
 
 if(__name__=="__main__"): 
-    PORT = 5000
+    PORT = os.getenv("PORT")
     print(f"Running server on port {PORT}")
     app.run(host='0.0.0.0', port=PORT)
