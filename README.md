@@ -18,7 +18,7 @@ You 2 choices
 
 ## Install Dependancies
 ```
-> .\venv\Scripts\activate
+> pip install -r requirements.txt
 ```
 
 ## Run the Server
