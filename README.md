@@ -2,7 +2,7 @@
 Simple Chess Server using flask, chessboard2.js and chess.js
 
 # Setup Instructions
-You 2 choices
+You 2 have choices
 
 ## 1. Docker
 ```
