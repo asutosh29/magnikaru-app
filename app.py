@@ -1,7 +1,9 @@
 from flask import Flask, render_template, jsonify, request
+import requests
 from flask_cors import CORS
 import chess
 import random
+import json
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -47,6 +49,25 @@ def random_move():
         "score":score,
         "message":f"Random move from server for input fen: {data['fen']}"
     })
+
+@app.route('/api/get_server_move', methods=['POST']) 
+def get_server_move():
+    """
+    Makes request to model server to get the best move and eval score
+    """
+    data = request.json
+    print(f"JSON from frontend: {data}")
+    api_url = "http://localhost:8900/api/make_move"  # request to the Model Server
+    payload = {
+        "fen": data["fen"]
+    }
+    try:
+        response = requests.post(api_url, json=json.dumps(payload))
+        response.raise_for_status()  # Raise an exception for HTTP errors (4xx or 5xx)
+        data = response.json()
+        return jsonify(data)
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if(__name__=="__main__"): 

@@ -98,7 +98,7 @@ function updateStatus() {
 
     if (!game.game_over()) {
         if (game.in_check()) statusHTML = whosTurn + ' is in check! '
-        statusHTML = statusHTML + whosTurn + ' to move.'
+        statusHTML = statusHTML + whosTurn + ' to move...'
     } else if (game.in_checkmate() && game.turn() === 'w') {
         statusHTML = 'White is in checkmate. Black wins!'
     } else if (game.in_checkmate() && game.turn() === 'b') {
@@ -260,7 +260,7 @@ async function make_move() {
         "fen": game.fen(),
         "pgn": game.pgn()
     }
-    const response = await fetch("/api/random_move", {
+    const response = await fetch("/api/get_server_move", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
