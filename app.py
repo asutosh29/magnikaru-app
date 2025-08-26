@@ -21,7 +21,7 @@ def make_random_move(current_fen):
     uci_move = leg_moves[move_idx]
     
     san_move = board.san(uci_move)
-    return san_move
+    return san_move, 0
 
 
 # ROUTES
@@ -39,10 +39,11 @@ def random_move():
     }
     '''
     data = request.json
-    move = make_random_move(data['fen'])
+    move,score = make_random_move(data['fen'])
     print(f"Random Move from server: {move}")
     return jsonify({
         "move":move,
+        "score":score,
         "message":f"Random move from server for input fen: {data['fen']}"
     })
 

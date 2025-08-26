@@ -1,4 +1,5 @@
 // EXAMPLE: THIS FILE IS BASED ON EXAMPLE GIVEN ON chessboard.js DOCUMENTATION
+initPGN()
 
 function attachEvent(selectorOrId, eventType, fn) {
     const el1 = document.getElementById(selectorOrId)
@@ -117,17 +118,94 @@ function updateStatus() {
     document.getElementById('gameStatus').innerHTML = statusHTML
 }
 
+function initPGN() {
+    const container = document.getElementById('pgnTable');
+    container.innerText = ''
+
+    const table = document.createElement('table');
+
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const headers = ['#', 'White', 'Black'];
+
+    headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    container.appendChild(table);
+}
+
 function updatePGN() {
-    const pgnEl = document.getElementById('gamePGN')
-    pgnEl.innerHTML = game.pgn({ max_width: 5, newline_char: '<br />' })
+    // const pgnEl = document.getElementById('gamePGN')
+    // pgnEl.innerHTML = game.pgn({ max_width: 5, newline_char: '<br />' })
+    console.log(game.pgn())
+
+    const pgnString = game.pgn();
+
+    // Parse PGN
+    const moveRegex = /(\d+)\.\s+(\S+)(?:\s+(\S+))?/g;
+    const matches = [...pgnString.matchAll(moveRegex)];
+    const moves = matches.map(match => ({
+        move: match[1],
+        white: match[2],
+        black: match[3] || '' // Use empty string if Black's move is missing
+    }));
+
+    const container = document.getElementById('pgnTable');
+    container.innerText = ''
+
+    const table = document.createElement('table');
+
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const headers = ['#', 'White', 'Black'];
+
+    headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+
+    moves.forEach(moveData => {
+        const row = document.createElement('tr');
+
+        const moveCell = document.createElement('td');
+        moveCell.textContent = moveData.move;
+        row.appendChild(moveCell);
+
+        const whiteCell = document.createElement('td');
+        whiteCell.textContent = moveData.white;
+        row.appendChild(whiteCell);
+
+        const blackCell = document.createElement('td');
+        blackCell.textContent = moveData.black;
+        row.appendChild(blackCell);
+
+        tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+
+
+    container.appendChild(table);
 
 
 }
-function updateFEN(fen) {
-    const fenEl = document.getElementById('gameFEN')
-    fenEl.innerHTML = game.fen()
-    console.log(game.fen())
-}
+// function updateFEN(fen) {
+//     const fenEl = document.getElementById('gameFEN')
+//     fenEl.innerHTML = game.fen()
+//     console.log(game.fen())
+// }
 
 function onDragStart(dragStartEvt) {
     // do not pick up pieces if the game is over
@@ -185,7 +263,7 @@ async function makeBotMove() {
     board.position(game.fen(), (_positionInfo) => {
         updateStatus()
         updatePGN()
-        updateFEN(game.fen())
+        // updateFEN(game.fen())
     })
 }
 
