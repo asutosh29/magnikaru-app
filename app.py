@@ -21,7 +21,8 @@ def make_random_move(current_fen):
     uci_move = leg_moves[move_idx]
     
     san_move = board.san(uci_move)
-    return san_move, 0
+    score = random.random()*(800)
+    return san_move, score
 
 
 # ROUTES

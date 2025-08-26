@@ -100,13 +100,13 @@ function updateStatus() {
         if (game.in_check()) statusHTML = whosTurn + ' is in check! '
         statusHTML = statusHTML + whosTurn + ' to move.'
     } else if (game.in_checkmate() && game.turn() === 'w') {
-        statusHTML = 'Game over: white is in checkmate. Black wins!'
+        statusHTML = 'White is in checkmate. Black wins!'
     } else if (game.in_checkmate() && game.turn() === 'b') {
-        statusHTML = 'Game over: black is in checkmate. White wins!'
+        statusHTML = 'Black is in checkmate. White wins!'
     } else if (game.in_stalemate() && game.turn() === 'w') {
-        statusHTML = 'Game is drawn. White is stalemated.'
+        statusHTML = 'White is stalemated.'
     } else if (game.in_stalemate() && game.turn() === 'b') {
-        statusHTML = 'Game is drawn. Black is stalemated.'
+        statusHTML = 'Black is stalemated.'
     } else if (game.in_threefold_repetition()) {
         statusHTML = 'Game is drawn by threefold repetition rule.'
     } else if (game.insufficient_material()) {
@@ -201,6 +201,30 @@ function updatePGN() {
 
 
 }
+
+function updateEvalBar(score) {
+    const whiteBar = document.querySelector('.eval-bar-white');
+    if (!whiteBar) {
+        console.error("Eval bar element not found!");
+        return;
+    }
+
+    // A +/- score of 800 centipawns (8 pawns) is usually a completely winning advantage.
+    // We can cap the visualization at this value.
+    const maxEval = 800; 
+    
+    // Clamp the score to the range [-maxEval, maxEval]
+    const clampedScore = Math.max(-maxEval, Math.min(maxEval, score));
+
+    // Convert the score from the range [-800, 800] to a percentage [0, 100].
+    // -800 score -> 0% height for white
+    //    0 score -> 50% height for white
+    // +800 score -> 100% height for white
+    const percentage = ((clampedScore + maxEval) / (2 * maxEval)) * 100;
+
+    // Apply the calculated height to the white bar element
+    whiteBar.style.height = `${percentage}%`;
+}
 // function updateFEN(fen) {
 //     const fenEl = document.getElementById('gameFEN')
 //     fenEl.innerHTML = game.fen()
@@ -259,6 +283,8 @@ async function makeBotMove() {
     // console.log(possibleMoves)
     // game.move(possibleMoves[randomIdx])
     game.move(json.move)
+    updateEvalBar(parseFloat(json.score))
+    
 
     board.position(game.fen(), (_positionInfo) => {
         updateStatus()
