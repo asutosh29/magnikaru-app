@@ -110,18 +110,19 @@ body {
 
 
 #pgnTable {
-    height: 60vh; 
-    overflow-y: auto; 
+    height: 60vh;
+    overflow-y: auto;
     width: 100%;
 
     border: 1px solid #555;
     border-radius: 8px;
-    background-color: #252525; 
+    background-color: #252525;
 }
 
 #pgnTable table {
     width: 100%;
-    border-collapse: collapse; /* Removes space between cells */
+    border-collapse: collapse;
+    /* Removes space between cells */
 }
 
 #pgnTable thead {
@@ -141,13 +142,15 @@ body {
 #pgnTable td {
     padding: 10px;
     text-align: center;
-    border-top: 1px solid #444; /* Separator lines between rows */
+    border-top: 1px solid #444;
+    /* Separator lines between rows */
 }
 
 #pgnTable td:first-child {
     font-weight: bold;
     color: #aaa;
-    width: 15%; /* Give the move number a smaller, fixed width */
+    width: 15%;
+    /* Give the move number a smaller, fixed width */
 }
 
 /* Zebra-striping for better readability */
@@ -172,9 +175,63 @@ body {
 #pgnTable::-webkit-scrollbar-thumb {
     background: #666;
     border-radius: 10px;
-    border: 2px solid #2e2e2e; /* Creates a padding effect */
+    border: 2px solid #2e2e2e;
+    /* Creates a padding effect */
 }
 
 #pgnTable::-webkit-scrollbar-thumb:hover {
     background: #888;
+}
+
+#myBoard {
+    position: relative;
+    /* Ensure the chessboard background doesn't interfere */
+    background: transparent !important;
+    /* May be needed depending on chessboard.js internal styles */
+}
+
+#myBoard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+    border-radius: 5px;
+}
+
+#myBoard::after {
+    content: 'Game Over';
+    /* The text content */
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 3.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+    z-index: 20;
+    /* Above the darkening layer */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease-in-out 0.2s, visibility 0.4s ease-in-out 0.2s;
+    /* Delay text fade-in */
+}
+
+#myBoard.game-over::before,
+#myBoard.game-over::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+#myBoard.game-over {
+    pointer-events: none;
 }

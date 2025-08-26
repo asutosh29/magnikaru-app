@@ -267,6 +267,13 @@ async function makeBotMove() {
     })
 }
 
+function showGameOverOnBoard() {
+    const myBoardDiv = document.getElementById('myBoard');
+    if (myBoardDiv) {
+        myBoardDiv.classList.add('game-over');
+    }
+}
+
 function onDrop(dropEvt) {
     // see if the move is legal
     const move = game.move({
@@ -288,6 +295,7 @@ function onDrop(dropEvt) {
             updatePGN()
             if (game.game_over()) {
                 console.log("Game Over!")
+                showGameOverOnBoard()
                 return
             }
             // make a random legal move for black
